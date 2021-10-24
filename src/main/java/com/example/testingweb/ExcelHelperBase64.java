@@ -1,10 +1,8 @@
 package com.example.testingweb;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Base64;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -13,12 +11,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class ExcelHelper {
 
-	public void writeExcel() throws IOException {
+public class ExcelHelperBase64 {
+
+	public String getExcel() throws IOException {
 		
 		
-		
+		String base64String = "";
 		Workbook workbook = new XSSFWorkbook();
 
 		try {
@@ -46,12 +45,10 @@ public class ExcelHelper {
 			cell.setCellValue("Quote");
 			cell.setCellStyle(style);
 
-			File currDir = new File(".");
-			String path = currDir.getAbsolutePath();
-			String fileLocation = path.substring(0, path.length() - 1) + "documents.xlsx";
-
-			FileOutputStream outputStream = new FileOutputStream(fileLocation);
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			workbook.write(outputStream);
+			base64String = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+			System.out.println("base64String::"+base64String);
 		} finally {
 			if (workbook != null) {
 
@@ -59,15 +56,7 @@ public class ExcelHelper {
 
 			}
 		}
+		return base64String;
 	}
-
-	private Map getDocumentMap() {
-		Map<String,String> documentMap = new HashMap<String,String>();
-		documentMap.put("Region", "India");
-		documentMap.put("Status", "Quote");
-		documentMap.put("Prop3", "propValue");
-		return documentMap;
-	}
-	
 	
 }

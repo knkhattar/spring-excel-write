@@ -2,6 +2,7 @@ package com.example.testingweb;
 
 import java.io.IOException;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,15 +15,18 @@ public class HomeController {
 		return "Hello, World";
 	}
 	@RequestMapping("/documentExcel")
-	public @ResponseBody String getDocumentExcel() {
-		ExcelHelper poiHelper = new ExcelHelper();
+	public ResponseEntity<DocumentResponse> getDocumentExcel() {
+		ExcelHelperBase64 poiHelper = new ExcelHelperBase64();
+		DocumentResponse  documentResponse = new DocumentResponse();
 		try {
-			poiHelper.writeExcel();
+			
+			documentResponse.setExcel(poiHelper.getExcel());
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "documentExcel";
+		return ResponseEntity.ok(documentResponse);
 	}
 
 }
